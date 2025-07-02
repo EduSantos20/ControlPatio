@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Login</title>
+  <link rel="stylesheet"  href="css/login.css" >
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h2>Login do Sistema</h2>
+  <form id="formLogin" action="">
+    <div class="login-container">
+      <label for="username">Usuário:</label>
+      <input type="text" id="username" required>
+
+      <label for="password">Senha:</label>
+      <input type="password" id="password" required>
+
+      <button id="btnLogin">Entrar</button>
+    
+      <div id="erro" class="error"></div>
+    </div>
+  </form>
+  <script src="js/login.js"></script>
+</body>
+</html>

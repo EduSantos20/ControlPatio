@@ -1,7 +1,9 @@
-document.getElementById("cadastroForm").addEventListener("submit", function(event) {
-    event.preventDefault();
+document
+  .getElementById("cadastroForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault()
 
-    const submitBtn = document.getElementById('submitBtn');
+    //const submitBtn = document.getElementById('submitBtn');
 
     // Validar CPF
     // const cpfInput = document.getElementById('cpf');
@@ -13,40 +15,40 @@ document.getElementById("cadastroForm").addEventListener("submit", function(even
     // }
 
     const data = {
-        name: document.getElementById("name").value,
-        cpf: document.getElementById("cpf").value,
-        telephone: document.getElementById("telephone").value,
-        transportador: document.getElementById("transportador").value,
-        tipoVeiculo: document.getElementById("tipoVeiculo").value,
-        placaCavalo: document.getElementById("placaCavalo").value,
-        placaBau1: document.getElementById("placaBau1").value,
-        placaBau2: document.getElementById("placaBau2").value,
-        finalidade: document.getElementById("finalidade").value,
-        cliente: document.getElementById("cliente").value,
-        nf: document.getElementById("nf").value,
-        descricao: document.getElementById("descricao").value
-    };
+      name: document.getElementById("name").value,
+      cpf: document.getElementById("cpf").value,
+      telephone: document.getElementById("telephone").value,
+      transportador: document.getElementById("transportador").value,
+      tipoVeiculo: document.getElementById("tipoVeiculo").value,
+      placaCavalo: document.getElementById("placaCavalo").value,
+      placaBau1: document.getElementById("placaBau1").value,
+      placaBau2: document.getElementById("placaBau2").value,
+      finalidade: document.getElementById("finalidade").value,
+      cliente: document.getElementById("cliente").value,
+      nf: document.getElementById("nf").value,
+      descricao: document.getElementById("descricao").value,
+    }
 
     fetch("http://localhost:8080/motoristas/creat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erro ao salvar");
-            }
-            alert("Cadastro realizado com sucesso!");
-            window.location.href = "http://localhost:8080/index.html";
-            document.getElementById("cadastroForm").reset();
-        })
-        .catch(error => {
-            console.error(error);
-            alert("Erro ao salvar cadastro.");
-        });
-});
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao salvar")
+        }
+        alert("Cadastro realizado com sucesso!")
+        window.location.href = "http://localhost:8080/index.html"
+        document.getElementById("cadastroForm").reset()
+      })
+      .catch((error) => {
+        console.error(error)
+        alert("Erro ao salvar cadastro.")
+      })
+  })
 
 // // Validação de CPF
 // function validateCPF(cpf) {
