@@ -13,6 +13,4 @@ RUN apt-get update && apt-get install -y git maven
 
 EXPOSE 8080
 
-COPY --from=build /target/ControlPatio-0.0.1-SNAPSHOT.jar app.jar
-
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
