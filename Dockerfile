@@ -10,8 +10,6 @@ FROM openjdk:17-jdk-slim
 # Instala o git e Maven
 RUN apt-get update && apt-get install -y git maven
 
-# Roda o Maven
-RUN mvn clean install
 
 EXPOSE 8080
 
