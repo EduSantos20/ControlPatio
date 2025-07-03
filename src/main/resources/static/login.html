@@ -3,25 +3,26 @@
 
 <head>
   <title>Login</title>
-  <link rel="stylesheet"  href="css/login.css" >
+  <link rel="stylesheet" href="css/login.css">
   <meta charset="UTF-8">
 </head>
 
 <body>
-  <h2>Login do Sistema</h2>
-  <form id="formLogin" action="">
-    <div class="login-container">
-      <label for="username">Usuário:</label>
-      <input type="text" id="username" required>
-
-      <label for="password">Senha:</label>
-      <input type="password" id="password" required>
-
-      <button id="btnLogin">Entrar</button>
-    
+  <div class="login-container">
+    <h2>Bem-vindo! Sistema ControlPatio</h2>
+    <form id="formLogin">
+      <label for="username">Usuário</label>
+      <input type="text" id="username" name="username" placeholder="Digite seu usuário" required />
+  
+      <label for="password">Senha</label>
+      <input type="password" id="password" name="password" placeholder="Digite sua senha" required />
+  
+      <button type="submit" id="btnLogin">Entrar</button>
+  
       <div id="erro" class="error"></div>
-    </div>
-  </form>
+    </form>
+  </div>
   <script src="js/login.js"></script>
 </body>
+
 </html>

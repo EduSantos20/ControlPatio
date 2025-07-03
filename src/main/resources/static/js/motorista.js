@@ -43,9 +43,11 @@ function preencherTabela(cadastros) {
             <td>${item.name}</td>
             <td>${item.telephone}</td>
             <td>${formatarData(item.dataCadastro)}</td>
+            <td id="contador" class="verde">Calculando ...</td>
         `
 
     tbody.appendChild(tr)
+
   })
 }
 
@@ -100,3 +102,33 @@ function filtrarDados(filtro) {
 // Chama a função ao carregar a página
 document.addEventListener("DOMContentLoaded", carregarDados)
 
+// Função para contador
+function atualizarContadorIndividual(item) {
+
+  const dataReferencia = new Date(item.dataCadastro)
+
+  function atualizar() {
+    const agora = new Date()
+    const diferencaMs = agora - dataReferencia
+
+    const horas = Math.floor(diferencaMs / (1000 * 60 * 60))
+    const minutos = Math.floor((diferencaMs % (1000 * 60 * 60)) / (1000 * 60))
+    const segundos = Math.floor((diferencaMs % (1000 * 60)) / 1000)
+
+    const tempoFormatado = `${String(horas).padStart(2, "0")}:${String(
+      minutos
+    ).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`
+    elemento.textContent = tempoFormatado
+
+    if (diferencaMs >= 4 * 60 * 60 * 1000) {
+      elemento.classList.remove("verde")
+      elemento.classList.add("vermelho")
+    } else {
+      elemento.classList.remove("vermelho")
+      elemento.classList.add("vermelho")
+    }
+  }
+
+  atualizar() // Inicial
+  setInterval(atualizar, 1000) // Atualiza a cada segundo
+}
