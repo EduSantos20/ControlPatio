@@ -6,11 +6,11 @@ Sistema web para controle de cadastro e gerenciamento de motoristas, veículos e
 
 - Cadastro de motoristas com dados pessoais, veículo e operação.
 - Listagem de motoristas cadastrados com filtros por tipo de operação, cliente, transportadora e placa.
-- Cadastro e autenticação de usuários do sistema.
+- Cadastro e autenticação de usuários do sistema.(Em desenvolvimento)
 - Interface web responsiva e moderna.
 - Integração com backend em Spring Boot e banco de dados PostgreSQL.
 - Operações de CRUD para motoristas e usuários.
-- Possibilidade de envio de SMS (estrutura preparada para integração com Twilio).
+- Possibilidade de envio de SMS (estrutura preparada para integração com Twilio).(Em desenvolvimento)
 
 ## Tecnologias Utilizadas
 
@@ -48,16 +48,10 @@ Sistema web para controle de cadastro e gerenciamento de motoristas, veículos e
 - **Cadastro de Motorista:** Formulário completo para cadastro de motoristas, veículos e operação.
 - **Listagem:** Tabela com filtros e ações rápidas sobre os cadastros.
 
-## Observações
+## Observações e fazes para concluir
 
-- O projeto está preparado para integração com envio de SMS via Twilio (ver classe comentada `TwilioConfig`).
-- O sistema não possui autenticação JWT/OAuth, mas pode ser facilmente integrado.
-- O frontend é puro HTML/CSS/JS, sem frameworks.
-
-## Estrutura de Pastas
-
-Veja a estrutura detalhada do projeto no início deste README.
-
----
+- O projeto está sendo preparado para integração com envio de SMS via Twilio (ver classe comentada `TwilioConfig`).
+- O sistema não possui autenticação JWT/OAuth,
+- Validações de usuário
 
 Desenvolvido para fins de colocar em prática o que foi aprendido na aula.
