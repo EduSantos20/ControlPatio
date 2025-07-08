@@ -1,11 +1,15 @@
-FROM maven:3.9.8-amazoncorretto-21 AS build
-WORKDIR /app
+FROM ubuntu:latest as build
+
+RUN apt-get update
+RUN apt-get install openjdk-21-jdk -y
 COPY . .
-RUN mvn clean package -X -DskipTests
 
+RUN apt-get install maven -y
+RUN mvn clean install -DskipTests
 
-FROM openjdk:21-rc-jdk-oracle
-WORKDIR /app
-COPY --from=build ./app/target/*.jar ./patio.jar
+FROM openjdk:21-jre-slim
+EXPOSE 8080
+
+COPY --from=build ./app/target/target/ControlPatio-0.0.1-SNAPSHOT.jar patio.jar
 ENTRYPOINT ["java", "-jar", "patio.jar","--debug"]
 
