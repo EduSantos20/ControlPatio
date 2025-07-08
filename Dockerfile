@@ -1,16 +1,11 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+FROM maven:3.9.8-amazoncorretto-21 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY . .
 RUN mvn clean package -X -DskipTests
 
-FROM openjdk:21-jre-slim
-FROM eclipse-temurin:21-jre
+
+FROM openjdk:21-rc-jdk-oracle
 WORKDIR /app
-COPY --from=build ./app/target/*.jar ./controlPatio.jar
+COPY --from=build ./app/target/*.jar ./patio.jar
+ENTRYPOINT ["java", "-jar", "patio.jar","--debug"]
 
-ENV PORT=8080
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "controlPatio.jar","--debug"]

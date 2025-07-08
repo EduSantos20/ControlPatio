@@ -16,7 +16,9 @@ function preencherTabela(cadastros) {
     const tr = document.createElement("tr")
 
     tr.innerHTML = `
-            <td><input type="checkbox" /></td>
+            <td>
+                <input id="checkbox-${item.id}" type="checkbox" />
+            </td>
             <td class="${
               item.marcacao === "undefined" ? "marcacao-green" : "marcacao-red"
             }">
@@ -48,6 +50,17 @@ function preencherTabela(cadastros) {
 
     tbody.appendChild(tr)
 
+    // Adiciona o evento de exclusão ao checkbox
+    const checkbox = tr.querySelector(`#checkbox-${item.id}`)
+    checkbox.addEventListener("change", () => {
+      document
+        .getElementById("excluirBtn")
+        .addEventListener("click", () => {
+          if (checkbox.checked) {
+            excluirMarcacao(item.id, item.telephone)
+          }
+        })
+    })
   })
 }
 
@@ -104,7 +117,6 @@ document.addEventListener("DOMContentLoaded", carregarDados)
 
 // Função para contador
 function atualizarContadorIndividual(item) {
-
   const dataReferencia = new Date(item.dataCadastro)
 
   function atualizar() {
@@ -132,3 +144,58 @@ function atualizarContadorIndividual(item) {
   atualizar() // Inicial
   setInterval(atualizar, 1000) // Atualiza a cada segundo
 }
+// Função para excluir marcação
+function excluirMarcacao(id, telephone) {
+  console.log("Excluir chamado para id:", id, "telefone:", telephone)
+  if (!confirm("Tem certeza que deseja excluir esta marcação?")) return
+
+  fetch(`http://localhost:8080/motoristas/${id}`, {
+    method: "DELETE"
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("Marcação excluída com sucesso!")
+        carregarDados() // Atualiza a tabela
+      } else {
+        alert("Erro ao excluir a marcação.")
+        carregarDados()
+      }
+    })
+    .catch(() => alert("Erro ao conectar com o servidor."))
+}
+
+document.getElementById("entradaBtn").addEventListener("click", function () {
+  // Seleciona todos os checkboxes marcados
+  const selecionados = Array.from(
+    document.querySelectorAll('input[type="checkbox"]:checked')
+  )
+
+  if (selecionados.length === 0) {
+    alert("Selecione pelo menos uma linha para enviar para expedição.")
+    return
+  }
+
+  // Para cada selecionado, pega o id
+  const idsSelecionados = selecionados.map((cb) => {
+    // O id do checkbox é "checkbox-123", então pegamos só o número
+    return cb.id.replace("checkbox-", "")
+  })
+
+  // Envie os ids para o backend para salvar na aba expedição
+  fetch("http://localhost:8080/motoristas/expedicao", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(idsSelecionados),
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("Enviado para expedição com sucesso!")
+        window.location.href = "http://localhost:8080/expedicao.html"
+      } else {
+        alert("Erro ao enviar para expedição.")
+      }
+    })
+    .catch(() => alert("Erro ao conectar com o servidor."))
+})

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ControlPatio- </title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <header>
+    <h1>ControlPatio</h1>
+    <button id="novoCadastroBtn">Histórico</button>
+  </header>
+
+  <section class="filters">
+    <select id="filtroCDE">
+      <option value="">Filtrar por Tipo</option>
+      <option value="C">C</option>
+      <option value="E">E</option>
+      <option value="D">D</option>
+      <option value="C/E">C/E</option>
+      <option value="C/D">C/D</option>
+    </select>
+    <input type="text" id="filtroCliente" placeholder="Filtrar por Cliente" />
+    <input type="text" id="filtroTransportadora" placeholder="Filtrar por Transportadora" />
+    <input type="text" id="filtroPlaca" placeholder="Filtrar por Placa" />
+  </section>
+  <div class="actions">
+    <button id="excluirBtn">Aguardando</button>
+    <button id="exibirBtn">Expedição</button>
+  </div>
+  <div class="actions">
+    <button id="excluirBtn">Voltar p/ Espera</button>
+    <button id="exibirBtn">Exibir</button>
+    <button id="editarBtn">Editar</button>
+    <button id="copiarBtn">Copiar</button>
+    <button id="enviarSMSBtn">Liberar Saída</button>
+  </div>
+  <div class="table-container">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Marcação</th>
+            <th>SMS</th>
+            <th>Cliente</th>
+            <th>Transp.</th>
+            <th>C/D/E</th>
+            <th>Veículo</th>
+            <th>Cavalo</th>
+            <th>Baú 1</th>
+            <th>Baú 2</th>
+            <th>Motorista</th>
+            <th>Telefone</th>
+            <th>Data Cadastro</th>
+            <th>Espera</th>
+          </tr>
+        </thead>
+        <tbody id="cadastrosBody">
+          <tr>
+            <td colspan="14" class="loading">Carregando dados...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mobile Cards (visible only on very small screens) -->
+  <div class="mobile-cards" id="mobileCards">
+
+  </div>
+
+  <script src="js/motorista.js"></script>
+</body>
+
+</html>
