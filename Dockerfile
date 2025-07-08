@@ -7,7 +7,7 @@ COPY . .
 RUN apt-get install maven -y
 RUN mvn clean install -DskipTests
 
-FROM openjdk:21-jre-slim
+FROM openjdk:21-ea-1-oracle
 EXPOSE 8080
 
 COPY --from=build ./app/target/target/ControlPatio-0.0.1-SNAPSHOT.jar patio.jar
