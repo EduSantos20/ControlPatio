@@ -10,6 +10,6 @@ RUN mvn clean install -DskipTests
 FROM openjdk:21-ea-1-oracle
 EXPOSE 8080
 
-COPY --from=build ./app/target/target/ControlPatio-0.0.1-SNAPSHOT.jar patio.jar
+COPY --from=build ./app/target/ControlPatio-0.0.1-SNAPSHOT.jar patio.jar
 ENTRYPOINT ["java", "-jar", "patio.jar","--debug"]
 
