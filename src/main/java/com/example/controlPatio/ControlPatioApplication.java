@@ -9,5 +9,4 @@ public class ControlPatioApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ControlPatioApplication.class, args);
 	}
-
 }

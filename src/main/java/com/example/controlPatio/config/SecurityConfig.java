@@ -1,4 +1,4 @@
-/**package com.example.controlPatio.config;
+/*package com.example.controlPatio.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,4 +41,4 @@ public class SecurityConfig {
 
     return http.build();
   }
-}**/
+}*/

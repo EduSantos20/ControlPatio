@@ -1,16 +1,25 @@
 FROM ubuntu:latest as build
 WORKDIR /app
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
+
+# Instalar dependências primeiro
+RUN apt-get update && \
+    apt-get install -y openjdk-21-jdk maven && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copiar arquivos do projeto
 COPY . .
-RUN mvn package
 
-RUN apt-get install maven -y
-RUN mvn clean install -DskipTests
+# Compilar o projeto
+RUN mvn clean package -DskipTests
 
-FROM openjdk:21-ea-1-oracle
+# Segunda stage - imagem final
+FROM openjdk:21-jre-slim
 EXPOSE 8080
 
-COPY --from=build ./app/target/*.jar patio.jar
-ENTRYPOINT ["java", "-jar", "patio.jar","--debug"]
+# Copiar o JAR compilado
+COPY --from=build /app/target/*.jar patio.jar
+
+# Definir o ponto de entrada
+ENTRYPOINT ["java", "-jar", "patio.jar", "--debug"]
 

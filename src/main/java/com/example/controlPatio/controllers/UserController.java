@@ -20,6 +20,7 @@ import com.example.controlPatio.entities.UserEntity;
 import com.example.controlPatio.repository.UserRepository;
 import com.example.controlPatio.service.UserService;
 
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
