@@ -11,7 +11,7 @@ RUN apt-get update && \
 COPY . .
 
 # Compilar o projeto
-RUN mvn clean package -DskipTests
+RUN mvn clean install
 
 # Segunda stage - imagem final
 FROM openjdk:21-ea-1-jdk-oracle
