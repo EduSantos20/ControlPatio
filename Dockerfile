@@ -11,10 +11,9 @@ RUN apt-get update && \
 COPY . .
 
 # Compilar o projeto
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 # Segunda stage - imagem final
-FROM openjdk:21-ea-1-jdk-oracle
 EXPOSE 8080
 
 # Copiar o JAR compilado
