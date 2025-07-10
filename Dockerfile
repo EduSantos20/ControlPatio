@@ -14,7 +14,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Segunda stage - imagem final
-FROM openjdk:21-jre-slim
+FROM openjdk:21-ea-1-jdk-oracle
 EXPOSE 8080
 
 # Copiar o JAR compilado
