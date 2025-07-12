@@ -9,7 +9,7 @@ function realizarLogin() {
   const username = document.getElementById("username").value
   const password = document.getElementById("password").value
 
-  fetch("http://localhost:8080/user/exists", {
+  fetch("https://controlpatio.onrender.com/user/exists", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +19,7 @@ function realizarLogin() {
     .then((response) => {
       if (response.ok) {
         // Login OK → redireciona
-        window.location.href = "http://localhost:8080"
+        window.location.href = "https://controlpatio.onrender.com"
         document.getElementById("formLogin").reset()
       } else if (response.status === 401) {
         document.getElementById("erro").innerText =

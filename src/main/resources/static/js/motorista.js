@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function carregarCadastros() {
-  fetch("http://localhost:8080/motoristas/listaMotorista")
+  fetch("https://controlpatio.onrender.com/listaMotorista")
     .then((response) => response.json())
     .then((data) => preencherTabela(data))
 }
@@ -78,14 +78,14 @@ document
   .getElementById("novoCadastroBtn")
   .addEventListener("click", function (event) {
     event.preventDefault()
-    window.location.href = "http://localhost:8080/cadastro.html"
+    window.location.href = "https://controlpatio.onrender.com/cadastro.html"
   })
 
 //filtrando por c, e, d
 let todosOsDados = [] // Variável global para armazenar todos os dados
 // Função para carregar dados iniciais
 function carregarDados() {
-  fetch("http://localhost:8080/motoristas/listaMotorista")
+  fetch("https://controlpatio.onrender.com/listaMotorista")
     .then((response) => response.json())
     .then((data) => {
       todosOsDados = data // Armazena todos os dados
@@ -181,7 +181,7 @@ function editarMotorista(id, name) {
       document.getElementById("cliente").value = data.cliente
       document.getElementById("nf").value = data.nf
       document.getElementById("descricao").value = data.descricao
-      window.location.href = "http://localhost:8080/cadastro.html"
+      window.location.href = "https://controlpatio.onrender.com/cadastro.html"
     })
     .catch((error) => {
       alert("Erro ao carregar dados do motorista para edição.")

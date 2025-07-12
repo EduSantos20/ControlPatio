@@ -29,7 +29,7 @@ document
       descricao: document.getElementById("descricao").value,
     }
 
-    fetch("http://localhost:8080/motoristas/creat", {
+    fetch("https://controlpatio.onrender.com/motoristas/creat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ document
           throw new Error("Erro ao salvar")
         }
         alert("Cadastro realizado com sucesso!")
-        window.location.href = "http://localhost:8080"
+        window.location.href = "https://controlpatio.onrender.com"
         document.getElementById("cadastroForm").reset()
       })
       .catch((error) => {

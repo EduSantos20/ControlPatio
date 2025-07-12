@@ -10,7 +10,7 @@ document
       password: document.getElementById("password").value,
     }
 
-    fetch("http://localhost:8080/user/create", {
+    fetch("https://controlpatio.onrender.com/user/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +22,7 @@ document
           throw new Error("Erro ao salvar")
         }
         alert("Cadastro realizado com sucesso!")
-        window.location.href = "http://localhost:8080/login.html"
+        window.location.href = "https://controlpatio.onrender.com/login.html"
         document.getElementById("loginForm").reset()
       })
       .catch((error) => {
