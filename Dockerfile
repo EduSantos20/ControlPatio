@@ -1,24 +1,17 @@
-FROM ubuntu:latest as build
-WORKDIR /app
+FROM ubuntu:latest As build
+LABEL authors="Eduar"
 
-# Instalar dependências primeiro
-RUN apt-get update && \
-    apt-get install -y openjdk-21-jdk maven && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copiar arquivos do projeto
+RUN apt-get update
+RUN apt-get install openjdk-21-jdk -y
 COPY . .
 
-# Compilar o projeto
-RUN mvn clean install -DskipTests
+RUN  apt-get install maven -y
+RUN mvn clean install
 
-# Segunda stage - imagem final
+FROM openjdk:21-jdk-slim
+
 EXPOSE 8080
 
-# Copiar o JAR compilado
-COPY --from=build /app/target/*.jar patio.jar
+COPY --from=build /target/ControlPatio-0.0.1-SNAPSHOT.jar patio.jar
 
-# Definir o ponto de entrada
-ENTRYPOINT ["java", "-jar", "patio.jar", "--debug"]
-
+ENTRYPOINT ["java", "-jar","patio.jar"]

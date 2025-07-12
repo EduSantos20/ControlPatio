@@ -11,18 +11,16 @@ function carregarCadastros() {
 function preencherTabela(cadastros) {
   const tbody = document.getElementById("cadastrosBody")
   tbody.innerHTML = ""
-
   cadastros.forEach((item) => {
     const tr = document.createElement("tr")
-
     tr.innerHTML = `
             <td>
                 <input id="checkbox-${item.id}" type="checkbox" />
             </td>
             <td class="${
-              item.marcacao === "undefined" ? "marcacao-green" : "marcacao-red"
+              item.marcacao === "undefined" ? "marcacao-red" : "marcacao-green"
             }">
-                ${item.marcacao}
+                ${item.dataCadastro}
             </td>
             <td>${item.sms}</td>
             <td>${item.cliente}</td>
@@ -45,21 +43,27 @@ function preencherTabela(cadastros) {
             <td>${item.name}</td>
             <td>${item.telephone}</td>
             <td>${formatarData(item.dataCadastro)}</td>
-            <td id="contador" class="verde">Calculando ...</td>
+            <td id="contador" class="red">Calculando ...</td>
         `
 
     tbody.appendChild(tr)
 
     // Adiciona o evento de exclusão ao checkbox
-    const checkbox = tr.querySelector(`#checkbox-${item.id}`)
+    var checkbox = tr.querySelector(`#checkbox-${item.id}`)
     checkbox.addEventListener("change", () => {
-      document
-        .getElementById("excluirBtn")
-        .addEventListener("click", () => {
-          if (checkbox.checked) {
-            excluirMarcacao(item.id, item.telephone)
-          }
-        })
+      document.getElementById("excluirBtn").addEventListener("click", () => {
+        if (checkbox.checked) {
+          excluirMarcacao(item.id, item.telephone)
+        }
+      })
+    })
+    //para editar
+    checkbox.addEventListener("change", () => {
+      document.getElementById("editarBtn").addEventListener("click", () => {
+        if (checkbox.checked) {
+          editarMotorista(item.id, item.name)
+        }
+      })
     })
   })
 }
@@ -88,7 +92,6 @@ function carregarDados() {
       preencherTabela(data) // Mostra todos inicialmente
     })
 }
-
 // Event listener para o filtro
 document.getElementById("filtroCDE").addEventListener("change", function () {
   const valorSelecionado = this.value
@@ -97,21 +100,13 @@ document.getElementById("filtroCDE").addEventListener("change", function () {
 
 function filtrarDados(filtro) {
   let dadosFiltrados
-
   if (filtro === "" || filtro === "todos") {
     dadosFiltrados = todosOsDados
   } else {
     dadosFiltrados = todosOsDados.filter((item) => item.finalidade === filtro)
   }
-
   preencherTabela(dadosFiltrados)
-
-  // Mostra quantos registros foram encontrados
-  console.log(
-    `Encontrados ${dadosFiltrados.length} registros para o filtro: ${filtro}`
-  )
 }
-
 // Chama a função ao carregar a página
 document.addEventListener("DOMContentLoaded", carregarDados)
 
@@ -150,52 +145,93 @@ function excluirMarcacao(id, telephone) {
   if (!confirm("Tem certeza que deseja excluir esta marcação?")) return
 
   fetch(`http://localhost:8080/motoristas/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
   })
     .then((response) => {
       if (response.ok) {
         alert("Marcação excluída com sucesso!")
         carregarDados() // Atualiza a tabela
       } else {
-        alert("Erro ao excluir a marcação.")
         carregarDados()
       }
     })
     .catch(() => alert("Erro ao conectar com o servidor."))
 }
-
-document.getElementById("entradaBtn").addEventListener("click", function () {
-  // Seleciona todos os checkboxes marcados
-  const selecionados = Array.from(
-    document.querySelectorAll('input[type="checkbox"]:checked')
-  )
-
-  if (selecionados.length === 0) {
-    alert("Selecione pelo menos uma linha para enviar para expedição.")
-    return
-  }
-
-  // Para cada selecionado, pega o id
-  const idsSelecionados = selecionados.map((cb) => {
-    // O id do checkbox é "checkbox-123", então pegamos só o número
-    return cb.id.replace("checkbox-", "")
-  })
-
-  // Envie os ids para o backend para salvar na aba expedição
-  fetch("http://localhost:8080/motoristas/expedicao", {
-    method: "POST",
+// Função para editar motorista
+function editarMotorista(id, name) {
+  console.log("ID do usuário: ", id)
+  console.log("ID do usuário: ", name)
+  fetch(`http://localhost:8080/motoristas/${id}`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(idsSelecionados),
   })
-    .then((response) => {
-      if (response.ok) {
-        alert("Enviado para expedição com sucesso!")
-        window.location.href = "http://localhost:8080/expedicao.html"
+    .then((response) => response.json())
+    .then((data) => {
+      document.getElementById("name").value = data.name
+      document.getElementById("cpf").value = data.cpf
+      document.getElementById("telephone").value = data.telephone
+      document.getElementById("transportador").value = data.transportador
+      document.getElementById("tipoVeiculo").value
+      document.getElementById("placaCavalo").value = data.placaCavalo
+      document.getElementById("placaBau1").value = data.placaBau1
+      document.getElementById("placaBau2").value = data.placaBau2
+      document.getElementById("finalidade").value = data.finalidade
+      document.getElementById("cliente").value = data.cliente
+      document.getElementById("nf").value = data.nf
+      document.getElementById("descricao").value = data.descricao
+      window.location.href = "http://localhost:8080/cadastro.html"
+    })
+    .catch((error) => {
+      alert("Erro ao carregar dados do motorista para edição.")
+      console.error(error)
+    })
+}
+
+// Filtro por cliente
+document.getElementById("filtroCliente").addEventListener("input", function () {
+  const filtro = this.value.toLowerCase()
+  const linhas = document.querySelectorAll("#cadastrosBody tr")
+  linhas.forEach((linha) => {
+    // Pega o texto da coluna "Cliente" (índice 3)
+    const cliente = linha.children[3]?.textContent.toLowerCase() || ""
+    if (cliente.includes(filtro) || linha.classList.contains("loading")) {
+      linha.style.display = ""
+    } else {
+      linha.style.display = "none"
+    }
+  })
+})
+
+// Filtro por transportadora
+document
+  .getElementById("filtroTransportadora")
+  .addEventListener("input", function () {
+    const filtro = this.value.toLowerCase()
+    const linhas = document.querySelectorAll("#cadastrosBody tr")
+    linhas.forEach((linha) => {
+      // Pega o texto da coluna "Cliente" (índice 3)
+      const cliente = linha.children[4]?.textContent.toLowerCase() || ""
+      if (cliente.includes(filtro) || linha.classList.contains("loading")) {
+        linha.style.display = ""
       } else {
-        alert("Erro ao enviar para expedição.")
+        linha.style.display = "none"
       }
     })
-    .catch(() => alert("Erro ao conectar com o servidor."))
-})
+  })
+
+  // Filtro por placa
+  document.getElementById("filtroPlaca").addEventListener("input", function () {
+    const filtro = this.value.toLowerCase()
+    const linhas = document.querySelectorAll("#cadastrosBody tr")
+    linhas.forEach((linha) => {
+      // Pega o texto da coluna "Cliente" (índice 3)
+      const cliente = linha.children[7]?.textContent.toLowerCase() || ""
+      if (cliente.includes(filtro) || linha.classList.contains("loading")) {
+        linha.style.display = ""
+      } else {
+        linha.style.display = "none"
+      }
+    })
+  })

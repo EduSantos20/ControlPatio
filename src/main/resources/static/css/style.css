@@ -13,10 +13,17 @@
     background-color: red;
     color: white;
 }
+.marcacao-green {
+    background-color: green;
+    color: white;
+}
 
 .marcacao-blue {
     background: #3498db;
-    color: white;
+}
+
+.marcacao-red {
+    background-color: red;
 }
 
 body {

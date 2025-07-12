@@ -4,6 +4,7 @@ import com.example.controlPatio.entities.MotoristaEntity;
 import com.example.controlPatio.service.MotoristaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,18 +21,22 @@ public class MotoristaController {
     }
 
     @PostMapping("/creat")
-    public ResponseEntity<Object> criar(@RequestBody MotoristaEntity motoristaEntity){
+    public ResponseEntity<Object> criar(@RequestBody MotoristaEntity motoristaEntity) {
         return ResponseEntity.ok(motoristaService.create(motoristaEntity));
     }
 
     @GetMapping("/listaMotorista")
-    public List<MotoristaEntity> listar(){
+    public List<MotoristaEntity> listar() {
         return motoristaService.findAll();
     }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletar(@PathVariable UUID id){
+    public ResponseEntity<Object> deletar(@PathVariable UUID id) {
         motoristaService.excluir(id);
         return ResponseEntity.badRequest().body("Motorista excluido!");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizar(@PathVariable UUID id, @RequestBody MotoristaEntity motoristaEntity) {
+        return ResponseEntity.ok(motoristaService.update(motoristaEntity));
     }
 }

@@ -41,7 +41,7 @@ document
           throw new Error("Erro ao salvar")
         }
         alert("Cadastro realizado com sucesso!")
-        window.location.href = "http://localhost:8080/index.html"
+        window.location.href = "http://localhost:8080"
         document.getElementById("cadastroForm").reset()
       })
       .catch((error) => {

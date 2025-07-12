@@ -19,7 +19,7 @@ function realizarLogin() {
     .then((response) => {
       if (response.ok) {
         // Login OK → redireciona
-        window.location.href = "http://localhost:8080/index.html"
+        window.location.href = "http://localhost:8080"
         document.getElementById("formLogin").reset()
       } else if (response.status === 401) {
         document.getElementById("erro").innerText =
