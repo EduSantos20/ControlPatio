@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexControlPatio {
   @RequestMapping("/")
   public String index() {
-    return "login";
+    return "index";
   }
 }
