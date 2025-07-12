@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function carregarCadastros() {
-  fetch("https://controlpatio.onrender.com/listaMotorista")
+  fetch("https://controlpatio.onrender.com/motoristas/listaMotorista")
     .then((response) => response.json())
     .then((data) => preencherTabela(data))
 }
@@ -85,7 +85,7 @@ document
 let todosOsDados = [] // Variável global para armazenar todos os dados
 // Função para carregar dados iniciais
 function carregarDados() {
-  fetch("https://controlpatio.onrender.com/listaMotorista")
+  fetch("https://controlpatio.onrender.com/motoristas/listaMotorista")
     .then((response) => response.json())
     .then((data) => {
       todosOsDados = data // Armazena todos os dados
