@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexControlPatio {
-  @GetMapping("/")
+  @RequestMapping("/")
   public String index() {
     return "login";
   }
