@@ -235,3 +235,13 @@ document
       }
     })
   })
+
+  //função para garantir que um checkbox seja marcado por fez
+  var checkbox = tr.querySelector(`#checkbox-${item.id}`)
+  checkbox.addEventListener("change", function(){
+    if(this.checked){
+        document.querySelectorAll('input[type="checkbox"]').forEach(a =>{
+            if(a !== this) a.checked = false
+        })
+    }
+  })
