@@ -19,7 +19,7 @@ function realizarLogin() {
     .then((response) => {
       if (response.ok) {
         // Login OK → redireciona
-        window.location.href = "https://controlpatio.onrender.com"
+        window.location.href = "https://controlpatio.onrender.com/index.html"
         document.getElementById("formLogin").reset()
       } else if (response.status === 401) {
         document.getElementById("erro").innerText =

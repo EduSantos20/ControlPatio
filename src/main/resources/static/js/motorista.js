@@ -48,6 +48,17 @@ function preencherTabela(cadastros) {
 
     tbody.appendChild(tr)
 
+    //para verrificar se apenas um checkbox está sendo marcado
+    var checkbox = tr.querySelector(`#checkbox-${item.id}`)
+    checkbox.addEventListener("change", function () {
+      if (this.checked) {
+        // Desmarca todos os outros checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          if (cb !== this) cb.checked = false
+        })
+      }
+    })
+
     // Adiciona o evento de exclusão ao checkbox
     var checkbox = tr.querySelector(`#checkbox-${item.id}`)
     checkbox.addEventListener("change", () => {
@@ -236,12 +247,3 @@ document
     })
   })
 
-  //função para garantir que um checkbox seja marcado por fez
-  var checkbox = tr.querySelector(`#checkbox-${item.id}`)
-  checkbox.addEventListener("change", function(){
-    if(this.checked){
-        document.querySelectorAll('input[type="checkbox"]').forEach(a =>{
-            if(a !== this) a.checked = false
-        })
-    }
-  })

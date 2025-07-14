@@ -1,4 +1,4 @@
-/*package com.example.controlPatio.config;
+package com.example.controlPatio.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,19 +26,19 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeHttpRequests(authz -> authz
-            .requestMatchers("/login", "/index", "/css/**", "/js/**").permitAll()
-            .anyRequest().authenticated())
-        .formLogin(form -> form
-            .loginPage("/login")
-            .defaultSuccessUrl("/index", true)
-            .failureUrl("/login?error=true")
-            .permitAll())
-        .logout(logout -> logout
-            .logoutUrl("/logout")
-            .logoutSuccessUrl("/login?logout=true")
-            .permitAll());
+            .authorizeHttpRequests(authz -> authz
+                    .requestMatchers("/login", "/index", "/css/**", "/js/**").permitAll()
+                    .anyRequest().authenticated())
+            .formLogin(form -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/index", true)
+                    .failureUrl("/login?error=true")
+                    .permitAll())
+            .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login?logout=true")
+                    .permitAll());
 
     return http.build();
   }
-}*/
+}
