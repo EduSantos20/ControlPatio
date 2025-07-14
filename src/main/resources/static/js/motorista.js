@@ -152,10 +152,10 @@ function atualizarContadorIndividual(item) {
 }
 // Função para excluir marcação
 function excluirMarcacao(id, telephone) {
-  console.log("Excluir chamado para id:", id, "telefone:", telephone)
+  //console.log("Excluir chamado para id:", id, "telefone:", telephone)
   if (!confirm("Tem certeza que deseja excluir esta marcação?")) return
 
-  fetch(`http://localhost:8080/motoristas/${id}`, {
+  fetch("https://controlpatio.onrender.com/motoristas/${id}", {
     method: "DELETE",
   })
     .then((response) => {
@@ -170,9 +170,9 @@ function excluirMarcacao(id, telephone) {
 }
 // Função para editar motorista
 function editarMotorista(id, name) {
-  console.log("ID do usuário: ", id)
-  console.log("ID do usuário: ", name)
-  fetch(`http://localhost:8080/motoristas/${id}`, {
+  //console.log("ID do usuário: ", id)
+  //console.log("ID do usuário: ", name)
+  fetch(`https://controlpatio.onrender.com/motoristas/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

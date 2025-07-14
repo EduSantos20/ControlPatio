@@ -22,7 +22,7 @@ document
           throw new Error("Erro ao salvar")
         }
         alert("Cadastro realizado com sucesso!")
-        window.location.href = "https://controlpatio.onrender.com/login.html"
+        window.location.href = "https://controlpatio.onrender.com"
         document.getElementById("loginForm").reset()
       })
       .catch((error) => {
