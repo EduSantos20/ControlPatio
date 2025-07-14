@@ -155,7 +155,7 @@ function excluirMarcacao(id, telephone) {
   //console.log("Excluir chamado para id:", id, "telefone:", telephone)
   if (!confirm("Tem certeza que deseja excluir esta marcação?")) return
 
-  fetch("https://controlpatio.onrender.com/motoristas/${id}", {
+  fetch(`https://controlpatio.onrender.com/motoristas/${id}`, {
     method: "DELETE",
   })
     .then((response) => {
