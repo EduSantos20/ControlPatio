@@ -29,7 +29,7 @@ document
       descricao: document.getElementById("descricao").value,
     }
 
-    fetch("https://controlpatio.onrender.com/motoristas/creat", {
+    fetch("https://controlpatio.onrender.com/motoristas/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

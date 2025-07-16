@@ -41,44 +41,106 @@ function preencherTabela(cadastros) {
             <td>${item.placaBau1}</td>
             <td>${item.placaBau2}</td>
             <td>${item.name}</td>
-            <td>${item.telephone}</td>
+            <td>
+                ${item.telephone}
+            </td>
             <td>${formatarData(item.dataCadastro)}</td>
             <td id="contador" class="red">Calculando ...</td>
         `
 
     tbody.appendChild(tr)
 
+    let itemSelecionado = null
+    // Adiciona evento de clique para selecionar o item
+    var checkbox = tr.querySelector(`#checkbox-${item.id}`)
+    checkbox.addEventListener("change", function () {
+      if (this.checked) {
+        document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          if (cb !== this) cb.checked = false
+        })
+        itemSelecionadoParaSMS = item
+      } else {
+        itemSelecionadoParaSMS = null
+      }
+    })
+
     //para verrificar se apenas um checkbox está sendo marcado
     var checkbox = tr.querySelector(`#checkbox-${item.id}`)
     checkbox.addEventListener("change", function () {
       if (this.checked) {
         // Desmarca todos os outros checkboxes
-        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
           if (cb !== this) cb.checked = false
         })
       }
     })
-
-    // Adiciona o evento de exclusão ao checkbox
-    var checkbox = tr.querySelector(`#checkbox-${item.id}`)
-    checkbox.addEventListener("change", () => {
-      document.getElementById("excluirBtn").addEventListener("click", () => {
-        if (checkbox.checked) {
-          excluirMarcacao(item.id, item.telephone)
-        }
-      })
-    })
-    //para editar
-    checkbox.addEventListener("change", () => {
-      document.getElementById("editarBtn").addEventListener("click", () => {
-        if (checkbox.checked) {
-          editarMotorista(item.id, item.name)
-        }
-      })
-    })
   })
 }
+document
+  .getElementById("excluirBtn")
+  .addEventListener("click", function (event) {
+    event.preventDefault()
+    mensagem()
+    excluir()
+  })
+function mensagem() {
+  if (!itemSelecionadoParaSMS) {
+    alert("Selecione uma linha antes de excluir!")
+    return
+  }
 
+  const telefone = itemSelecionadoParaSMS.telephone.replace(/\D/g, "")
+  const mensagem = prompt(
+    "Digite a mensagem para o motorista antes de excluir:"
+  )
+
+  if (!mensagem) {
+    alert("Mensagem não enviada: você não digitou nada.")
+    return
+  }
+  if (telefone.length < 10) {
+    alert("Telefone inválido.")
+    return
+  }
+  // Envia mensagem via WhatsApp
+  const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`
+  window.open(url, "_blank")
+}
+function excluir() {
+  fetch(
+    `https://controlpatio.onrender.com/motoristas/${itemSelecionadoParaSMS.id}`,
+    {
+      method: "DELETE",
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        alert("Marcação excluída com sucesso!")
+        carregarDados() // Atualiza a tabela
+      } else {
+        carregarDados()
+      }
+    })
+    .catch(() => alert("Erro ao conectar com o servidor."))
+}
+document.getElementById("enviarSMSBtn").addEventListener("click", function () {
+  if (!itemSelecionadoParaSMS) {
+    alert("Selecione uma linha antes de enviar o SMS!")
+    return
+  }
+  const telefone = itemSelecionadoParaSMS.telephone.replace(/\D/g, "")
+  const mensagem = prompt("Informe a doca:")
+  if (mensagem && telefone.length >= 10) {
+    const url = `http://wa.me/55${telefone}?text=${encodeURIComponent(
+      "Olá, motorista se apresente para carregar doca: " + mensagem
+    )}`
+    window.open(url, "_blank")
+  } else if (!mensagem) {
+    alert("Mensagem não enviada: você não digitou nada.")
+  } else {
+    alert("Telefone inválido.")
+  }
+})
 function formatarData(dataString) {
   if (!dataString) return ""
   const data = new Date(dataString)
@@ -150,29 +212,11 @@ function atualizarContadorIndividual(item) {
   atualizar() // Inicial
   setInterval(atualizar, 1000) // Atualiza a cada segundo
 }
-// Função para excluir marcação
-function excluirMarcacao(id, telephone) {
-  //console.log("Excluir chamado para id:", id, "telefone:", telephone)
-  if (!confirm("Tem certeza que deseja excluir esta marcação?")) return
-
-  fetch(`https://controlpatio.onrender.com/motoristas/${id}`, {
-    method: "DELETE",
-  })
-    .then((response) => {
-      if (response.ok) {
-        alert("Marcação excluída com sucesso!")
-        carregarDados() // Atualiza a tabela
-      } else {
-        carregarDados()
-      }
-    })
-    .catch(() => alert("Erro ao conectar com o servidor."))
-}
 // Função para editar motorista
 function editarMotorista(id, name) {
   //console.log("ID do usuário: ", id)
   //console.log("ID do usuário: ", name)
-  fetch(`https://controlpatio.onrender.com/motoristas/${id}`, {
+  fetch(`http://localhost:8080/motoristas/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -192,7 +236,7 @@ function editarMotorista(id, name) {
       document.getElementById("cliente").value = data.cliente
       document.getElementById("nf").value = data.nf
       document.getElementById("descricao").value = data.descricao
-      window.location.href = "https://controlpatio.onrender.com/cadastro.html"
+      window.location.href = "http://localhost:8080/cadastro.html"
     })
     .catch((error) => {
       alert("Erro ao carregar dados do motorista para edição.")
@@ -232,18 +276,17 @@ document
     })
   })
 
-  // Filtro por placa
-  document.getElementById("filtroPlaca").addEventListener("input", function () {
-    const filtro = this.value.toLowerCase()
-    const linhas = document.querySelectorAll("#cadastrosBody tr")
-    linhas.forEach((linha) => {
-      // Pega o texto da coluna "Cliente" (índice 3)
-      const cliente = linha.children[7]?.textContent.toLowerCase() || ""
-      if (cliente.includes(filtro) || linha.classList.contains("loading")) {
-        linha.style.display = ""
-      } else {
-        linha.style.display = "none"
-      }
-    })
+// Filtro por placa
+document.getElementById("filtroPlaca").addEventListener("input", function () {
+  const filtro = this.value.toLowerCase()
+  const linhas = document.querySelectorAll("#cadastrosBody tr")
+  linhas.forEach((linha) => {
+    // Pega o texto da coluna "Cliente" (índice 3)
+    const cliente = linha.children[7]?.textContent.toLowerCase() || ""
+    if (cliente.includes(filtro) || linha.classList.contains("loading")) {
+      linha.style.display = ""
+    } else {
+      linha.style.display = "none"
+    }
   })
-
+})

@@ -4,7 +4,7 @@ import com.example.controlPatio.entities.MotoristaEntity;
 import com.example.controlPatio.service.MotoristaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class MotoristaController {
         this.motoristaService = motoristaService;
     }
 
-    @PostMapping("/creat")
+    @PostMapping("/create")
     public ResponseEntity<Object> criar(@RequestBody MotoristaEntity motoristaEntity) {
         return ResponseEntity.ok(motoristaService.create(motoristaEntity));
     }
