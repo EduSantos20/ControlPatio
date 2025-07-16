@@ -84,27 +84,22 @@ document
     excluir()
   })
 function mensagem() {
-  if (!itemSelecionadoParaSMS) {
-    alert("Selecione uma linha antes de excluir!")
-    return
-  }
-
-  const telefone = itemSelecionadoParaSMS.telephone.replace(/\D/g, "")
-  const mensagem = prompt(
-    "Digite a mensagem para o motorista antes de excluir:"
-  )
-
-  if (!mensagem) {
-    alert("Mensagem não enviada: você não digitou nada.")
-    return
-  }
-  if (telefone.length < 10) {
-    alert("Telefone inválido.")
-    return
-  }
-  // Envia mensagem via WhatsApp
-  const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`
-  window.open(url, "_blank")
+    if (!itemSelecionadoParaSMS) {
+      alert("Selecione uma linha antes de enviar o SMS!")
+      return
+    }
+    const telefone = itemSelecionadoParaSMS.telephone.replace(/\D/g, "")
+    const mensagem = prompt("Informe a doca:")
+    if (mensagem && telefone.length >= 10) {
+      const url = `http://wa.me/55${telefone}?text=${encodeURIComponent(
+        "Olá, motorista se apresente para carregar doca: " + mensagem
+      )}`
+      window.open(url, "_blank")
+    } else if (!mensagem) {
+      alert("Mensagem não enviada: você não digitou nada.")
+    } else {
+      alert("Telefone inválido.")
+    }
 }
 function excluir() {
   fetch(
