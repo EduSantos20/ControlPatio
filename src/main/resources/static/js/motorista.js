@@ -18,11 +18,11 @@ function preencherTabela(cadastros) {
                 <input id="checkbox-${item.id}" type="checkbox" />
             </td>
             <td class="${
-              item.marcacao === "undefined" ? "marcacao-red" : "marcacao-green"
+              item.marcacao === "UNDEFINED" ? "marcacao-red" : "marcacao-green"
             }">
-                ${item.dataCadastro}
+                ${formatarData(item.dataCadastro)}
             </td>
-            <td>${item.sms}</td>
+            <td id="mensagem-${item.sms}" >${item.sms}</td>
             <td>${item.cliente}</td>
             <td>${item.transportador}</td>
             <td class="${
@@ -44,11 +44,36 @@ function preencherTabela(cadastros) {
             <td>
                 ${item.telephone}
             </td>
-            <td>${formatarData(item.dataCadastro)}</td>
-            <td id="contador" class="red">Calculando ...</td>
+            <td>${formatarData1(item.dataCadastro)}</td>
+            <td id="status-${item.id}" class="status">Calculando ...</td>
         `
 
     tbody.appendChild(tr)
+
+    const dataBase = new Date(item.dataCadastro) // data do banco
+    const dataAtual = new Date() // data atual
+
+    // Soma 4 horas à data do banco
+    const limite = new Date(dataBase.getTime() + 4 * 60 * 60 * 1000)
+
+    // Verifica se a data atual passou do limite
+    const passouLimite = dataAtual > limite
+
+    const statusCell = document.getElementById(`status-${item.id}`)
+
+    if (passouLimite) {
+      // Calcula o atraso em minutos
+      const atrasoMs = dataAtual - limite
+      const minutosAtraso = Math.floor(atrasoMs / (1000 * 60))
+      const horas = Math.floor(minutosAtraso / 60)
+      const minutos = minutosAtraso % 60
+
+      statusCell.textContent = `${horas}h  ${minutos}m`
+      statusCell.classList.add("vermelho")
+    } else {
+      statusCell.textContent = "Em dia"
+      statusCell.classList.add("verde")
+    }
 
     let itemSelecionado = null
     // Adiciona evento de clique para selecionar o item
@@ -84,22 +109,24 @@ document
     excluir()
   })
 function mensagem() {
-    if (!itemSelecionadoParaSMS) {
-      alert("Selecione uma linha antes de enviar o SMS!")
-      return
-    }
-    const telefone = itemSelecionadoParaSMS.telephone.replace(/\D/g, "")
-    const mensagem = prompt("Informe a doca:")
-    if (mensagem && telefone.length >= 10) {
-      const url = `http://wa.me/55${telefone}?text=${encodeURIComponent(
-        "Olá, motorista se apresente para carregar doca: " + mensagem
-      )}`
-      window.open(url, "_blank")
-    } else if (!mensagem) {
-      alert("Mensagem não enviada: você não digitou nada.")
-    } else {
-      alert("Telefone inválido.")
-    }
+  if (!itemSelecionadoParaSMS) {
+    alert("Selecione uma linha antes de enviar o SMS!")
+    return
+  }
+  const telefone = itemSelecionadoParaSMS.telephone.replace(/\D/g, "")
+  const mensagem = prompt(
+    "Digite uma mensagem para o motorista para informa por que está sendo desmarcando:"
+  )
+  if (mensagem && telefone.length >= 10) {
+    const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(
+      "Olá, motorista se apresente para carregar doca: " + mensagem
+    )}`
+    window.open(url, "_blank")
+  } else if (!mensagem) {
+    alert("Mensagem não enviada: você não digitou nada.")
+  } else {
+    alert("Telefone inválido.")
+  }
 }
 function excluir() {
   fetch(
@@ -123,13 +150,27 @@ document.getElementById("enviarSMSBtn").addEventListener("click", function () {
     alert("Selecione uma linha antes de enviar o SMS!")
     return
   }
+
   const telefone = itemSelecionadoParaSMS.telephone.replace(/\D/g, "")
   const mensagem = prompt("Informe a doca:")
+
   if (mensagem && telefone.length >= 10) {
-    const url = `http://wa.me/55${telefone}?text=${encodeURIComponent(
-      "Olá, motorista se apresente para carregar doca: " + mensagem
+    const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(
+      `Olá, motorista. Se apresente para carregar. Doca: ${mensagem}`
     )}`
+
+    // Abre WhatsApp
     window.open(url, "_blank")
+
+    // ✅ Atualiza a célula de mensagem correta
+    const mensagemCell = document.querySelector(
+      `#mensagem-${itemSelecionadoParaSMS.sms}`
+    )
+
+    if (mensagemCell) {
+      mensagemCell.textContent = `Acionado para doca: ${mensagem}`
+      mensagemCell.classList.add("acionado")
+    }
   } else if (!mensagem) {
     alert("Mensagem não enviada: você não digitou nada.")
   } else {
@@ -139,7 +180,12 @@ document.getElementById("enviarSMSBtn").addEventListener("click", function () {
 function formatarData(dataString) {
   if (!dataString) return ""
   const data = new Date(dataString)
-  return data.toLocaleString("pt-BR")
+  return data.toLocaleString("pt-br")
+}
+function formatarData1(dataString) {
+  if (!dataString) return "" // Verifica se a data é válida
+  const data = new Date()
+  return data.toLocaleString("pt-br")
 }
 
 document
@@ -177,67 +223,6 @@ function filtrarDados(filtro) {
 }
 // Chama a função ao carregar a página
 document.addEventListener("DOMContentLoaded", carregarDados)
-
-// Função para contador
-function atualizarContadorIndividual(item) {
-  const dataReferencia = new Date(item.dataCadastro)
-
-  function atualizar() {
-    const agora = new Date()
-    const diferencaMs = agora - dataReferencia
-
-    const horas = Math.floor(diferencaMs / (1000 * 60 * 60))
-    const minutos = Math.floor((diferencaMs % (1000 * 60 * 60)) / (1000 * 60))
-    const segundos = Math.floor((diferencaMs % (1000 * 60)) / 1000)
-
-    const tempoFormatado = `${String(horas).padStart(2, "0")}:${String(
-      minutos
-    ).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`
-    elemento.textContent = tempoFormatado
-
-    if (diferencaMs >= 4 * 60 * 60 * 1000) {
-      elemento.classList.remove("verde")
-      elemento.classList.add("vermelho")
-    } else {
-      elemento.classList.remove("vermelho")
-      elemento.classList.add("vermelho")
-    }
-  }
-
-  atualizar() // Inicial
-  setInterval(atualizar, 1000) // Atualiza a cada segundo
-}
-// Função para editar motorista
-function editarMotorista(id, name) {
-  //console.log("ID do usuário: ", id)
-  //console.log("ID do usuário: ", name)
-  fetch(`http://localhost:8080/motoristas/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      document.getElementById("name").value = data.name
-      document.getElementById("cpf").value = data.cpf
-      document.getElementById("telephone").value = data.telephone
-      document.getElementById("transportador").value = data.transportador
-      document.getElementById("tipoVeiculo").value
-      document.getElementById("placaCavalo").value = data.placaCavalo
-      document.getElementById("placaBau1").value = data.placaBau1
-      document.getElementById("placaBau2").value = data.placaBau2
-      document.getElementById("finalidade").value = data.finalidade
-      document.getElementById("cliente").value = data.cliente
-      document.getElementById("nf").value = data.nf
-      document.getElementById("descricao").value = data.descricao
-      window.location.href = "http://localhost:8080/cadastro.html"
-    })
-    .catch((error) => {
-      alert("Erro ao carregar dados do motorista para edição.")
-      console.error(error)
-    })
-}
 
 // Filtro por cliente
 document.getElementById("filtroCliente").addEventListener("input", function () {

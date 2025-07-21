@@ -11,7 +11,4 @@ import com.example.controlPatio.entities.UserEntity;
 public interface UserRepository  extends JpaRepository<UserEntity, UUID> {
   // Método para encontrar um usuário pelo nome de usuário
   Optional<UserEntity> findByUsername(String username);
-  // Método para verificar se um usuário existe pelo nome de usuário
-  boolean existsByUsername(String username);
-  boolean existsByPassword(String password);
 }

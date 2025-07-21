@@ -1,73 +1,119 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ControlPatio- </title>
-        <link rel="stylesheet" href="css/style.css" />
-        <link rel="shortcut icon" href="img/6174260.jpg"/>
-    </head>
-    <body>
-    <header>
-        <h1>ControlPatio</h1>
-        <button id="novoCadastroBtn">Criar novo cadastro</button>
-        <button type="button" class="btn-volta" onclick="history.back()">← Volta</button>
-    </header>
 
-    <section class="filters">
-        <select id="filtroCDE">
-            <option value="">Filtrar por Tipo</option>
-            <option value="C">C</option>
-            <option value="E">E</option>
-            <option value="D">D</option>
-            <option value="C/E">C/E</option>
-            <option value="C/D">C/D</option>
-        </select>
-        <input type="text" id="filtroCliente" placeholder="Filtrar por Cliente" />
-        <input type="text" id="filtroTransportadora" placeholder="Filtrar por Transportadora" />
-        <input type="text" id="filtroPlaca" placeholder="Filtrar por Placa" />
-    </section>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ControlPatio- </title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" href="img/6174260.jpg" />
+</head>
 
-    <div class="actions">
-        <button id="excluirBtn">Excluir</button>
-        <button id="editarBtn">Editar</button>
-        <button id="enviarSMSBtn">SMS</button>
-        <button id="entradaBtn">Entrada</button>
-    </div>
-    <div class="table-container">
-        <div class="table-scroll">
-            <table>
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Marcação</th>
-                    <th>SMS</th>
-                    <th>Cliente</th>
-                    <th>Transp.</th>
-                    <th>C/D/E</th>
-                    <th>Veículo</th>
-                    <th>Cavalo</th>
-                    <th>Baú 1</th>
-                    <th>Baú 2</th>
-                    <th>Motorista</th>
-                    <th>Telefone</th>
-                    <th>Data Cadastro</th>
-                    <th>Espera</th>
-                </tr>
-                </thead>
-                <tbody id="cadastrosBody">
-                <tr>
-                    <td colspan="14" class="loading">Carregando dados...</td>
-                </tr>
-                </tbody>
-            </table>
+<body>
+
+    <div class="position">
+        <!-- Header -->
+        <header class="header">
+            <h1>CONTROLPATIO</h1>
+            <div class="header-buttons">
+                <button id="novoCadastroBtn" class="btn btn-green">Criar novo cadastro</button>
+                <button onclick="history.back()" class="btn btn-blue">←Sair</button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-screen="patio">
+                    <span class="icon">⏰</span>
+                    <span id="patio-count">Aguardando (3)</span>
+                </button>
+                <button class="nav-btn" data-screen="expedicao">
+                    <span class="icon">🚛</span>
+                    <span id="expedicao-count">Expedição (0)</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filters-grid">
+                <select id="filtroCDE" class="filter-input">
+                    <option value="">Filtrar por Tipo</option>
+                    <option value="C">C</option>
+                    <option value="E">E</option>
+                    <option value="D">D</option>
+                    <option value="C/E">C/E</option>
+                    <option value="C/D">C/D</option>
+                </select>
+                <input id="filtroCliente" type="text" class="filter-input" placeholder="Filtrar por Cliente">
+                <input id="filtroTransportadora" type="text" class="filter-input"
+                    placeholder="Filtrar por Transportadora">
+                <input id="filtroPlaca" type="text" class="filter-input" placeholder="Filtrar por Placa">
+            </div>
         </div>
     </div>
-
-    <!-- Mobile Cards (visible only on very small screens) -->
-    <div class="mobile-cards" id="mobileCards">
-
+    <!-- Action Buttons -->
+    <div class="action-buttons" id="action-buttons">
+        <button class="btn btn-blue" id="move-btn" disabled>
+            <span class="icon">🚛</span>
+            Mover para Expedição (0)
+        </button>
+        <button id="excluirBtn" class="btn btn-orange">
+            <span class="icon">🗑️</span>
+            Excluir
+        </button>
+        <button id="editarBtn" class="btn btn-orange">
+            <span class="icon">✏️</span>
+            Editar
+        </button>
+        <button id="enviarSMSBtn" class="btn btn-green">
+            <span class="icon">💬</span>
+            SMS
+        </button>
+        <button id="entradaBtn" class="btn btn-gray">
+            <span class="icon">⏱️</span>
+            Entrada
+        </button>
     </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-card">
+            <div class="content-header">
+                <h2 class="content-title" id="content-title">PÁTIO</h2>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead id="table-header">
+                        <tr>
+                            <th>✓</th>
+                            <th>MARCAÇÃO</th>
+                            <th>SMS</th>
+                            <th>CLIENTE</th>
+                            <th>TRANSP.</th>
+                            <th>C/D/E</th>
+                            <th>VEÍCULO</th>
+                            <th>CAVALO</th>
+                            <th>BAÚ 1</th>
+                            <th>BAÚ 2</th>
+                            <th>MOTORISTA</th>
+                            <th>TELEFONE</th>
+                            <th>DATA CADASTRO</th>
+                            <th>ESPERA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cadastrosBody">
+                        <tr>
+                            <td colspan="14" class="loading">Carregando dados...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
     <script src=js/motorista.js></script>
-    </body>
+</body>
+
 </html>

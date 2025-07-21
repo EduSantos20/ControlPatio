@@ -4,10 +4,13 @@
   padding: 0;
   box-sizing: border-box;
 }
+.register{
+  margin-top: 10px;
+}
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #2980b9, #6dd5fa);
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -74,10 +77,12 @@ button:active {
 }
 
 .error {
-  color: red;
+  color: wheat;
+  background: red;
   margin-top: 15px;
   text-align: center;
   font-size: 14px;
+  border-radius: 5px;
 }
 
 /* Responsivo */
