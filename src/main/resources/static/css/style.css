@@ -4,6 +4,20 @@
     box-sizing: border-box;
 }
 
+tr input[type="checkbox"]:checked {
+    outline: 2px solid blue;
+}
+
+.nav-btn.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+#tabelaPrincipal.expedicao {
+    background-color: #f2f8ff;
+}
+
 .verde {
     background-color: green;
     color: white;

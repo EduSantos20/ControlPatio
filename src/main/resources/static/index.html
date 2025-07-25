@@ -26,7 +26,7 @@
             <div class="nav-buttons">
                 <button class="nav-btn active" data-screen="patio">
                     <span class="icon">⏰</span>
-                    <span id="patio-count">Aguardando (3)</span>
+                    <span id="patio-count">Aguardando (0)</span>
                 </button>
                 <button class="nav-btn" data-screen="expedicao">
                     <span class="icon">🚛</span>
@@ -55,10 +55,7 @@
     </div>
     <!-- Action Buttons -->
     <div class="action-buttons" id="action-buttons">
-        <button class="btn btn-blue" id="move-btn" disabled>
-            <span class="icon">🚛</span>
-            Mover para Expedição (0)
-        </button>
+        <button class="btn btn-blue" onclick="copiarLinhaSelecionada()">Copiar Linha</button>
         <button id="excluirBtn" class="btn btn-orange">
             <span class="icon">🗑️</span>
             Excluir
@@ -75,6 +72,7 @@
             <span class="icon">⏱️</span>
             Entrada
         </button>
+        <button class="btn btn-gray" id="exportarExcelBtn">Exportar para Excel</button>
     </div>
 
     <!-- Main Content -->
@@ -85,12 +83,12 @@
             </div>
 
             <div class="table-container">
-                <table>
+                <table id="tabelaPrincipal">
                     <thead id="table-header">
                         <tr>
                             <th>✓</th>
                             <th>MARCAÇÃO</th>
-                            <th>SMS</th>
+                            <th>STATUS</th>
                             <th>CLIENTE</th>
                             <th>TRANSP.</th>
                             <th>C/D/E</th>
@@ -114,6 +112,7 @@
         </div>
     </main>
     <script src=js/motorista.js></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </body>
 
 </html>
