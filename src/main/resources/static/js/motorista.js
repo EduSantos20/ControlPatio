@@ -1,28 +1,36 @@
+//document.addEventListener("DOMContentLoaded", () => {
+//  carregarCadastros()
+//})
 document.addEventListener("DOMContentLoaded", () => {
-  carregarCadastros()
+  carregarCadastros("AGUARDANDO")
+  atualizarContadores()
 })
 
-function carregarCadastros() {
-  fetch("https://controlpatio.onrender.com/motoristas/listaMotorista")
-    .then((response) => response.json())
-    .then((data) => preencherTabela(data))
-}
+let itemSelecionadoParaSMS = null
+
+//function carregarCadastros() {
+//  fetch("http://localhost:8080/motoristas/listaMotorista")
+//    .then((response) => response.json())
+//    .then((data) => preencherTabela(data))
+//}
 
 function preencherTabela(cadastros) {
   const tbody = document.getElementById("cadastrosBody")
-  tbody.innerHTML = ""
+  tbody.innerHTML = " "
   cadastros.forEach((item) => {
     const tr = document.createElement("tr")
     tr.innerHTML = `
             <td>
-                <input id="checkbox-${item.id}" type="checkbox" />
+                <input id="checkbox-${item.id}" type="checkbox" data-id="${
+      item.id
+    }"/>
             </td>
             <td class="${
               item.marcacao === "UNDEFINED" ? "marcacao-red" : "marcacao-green"
             }">
                 ${formatarData(item.dataCadastro)}
             </td>
-            <td id="mensagem-${item.sms}" >${item.sms}</td>
+            <td>${item.status}</td>
             <td>${item.cliente}</td>
             <td>${item.transportador}</td>
             <td class="${
@@ -75,7 +83,6 @@ function preencherTabela(cadastros) {
       statusCell.classList.add("verde")
     }
 
-    let itemSelecionado = null
     // Adiciona evento de clique para selecionar o item
     var checkbox = tr.querySelector(`#checkbox-${item.id}`)
     checkbox.addEventListener("change", function () {
@@ -101,6 +108,88 @@ function preencherTabela(cadastros) {
     })
   })
 }
+
+function carregarCadastros(status = "AGUARDANDO") {
+  fetch(`https://controlpatio.onrender.com/motoristas/listaPorStatus/${status}`)
+    .then((response) => response.json())
+    .then((data) => {
+      preencherTabela(data)
+      atualizarContadores()
+    })
+}
+
+function atualizarContadores() {
+  fetch("https://controlpatio.onrender.com/motoristas/listaPorStatus/AGUARDANDO")
+    .then((res) => res.json())
+    .then((data) => {
+      document.getElementById(
+        "patio-count"
+      ).textContent = `Aguardando (${data.length})`
+    })
+
+  fetch(`https://controlpatio.onrender.com/motoristas/listaPorStatus/EXPEDICAO`)
+    .then((res) => res.json())
+    .then((data) => {
+      document.getElementById(
+        "expedicao-count"
+      ).textContent = `Expedição (${data.length})`
+    })
+}
+
+document.getElementById("entradaBtn").addEventListener("click", () => {
+  if (!itemSelecionadoParaSMS) {
+    alert("Selecione uma linha!")
+    return
+  }
+  const exp = itemSelecionadoParaSMS.id
+
+  fetch(`https://controlpatio.onrender.com/motoristas/moverParaExpedicao/${exp}`, {
+    method: "PUT",
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro ao mover para expedição")
+      return response.json()
+    })
+    .then(() => {
+      alert("Movido para expedição.")
+      carregarCadastros("AGUARDANDO")
+    })
+    .catch((err) => {
+      console.error(err)
+      alert("Erro ao processar.")
+    })
+})
+
+document.querySelectorAll(".nav-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach((b) => b.classList.remove("active"))
+    btn.classList.add("active")
+
+    const aba = btn.dataset.screen
+    const tabela = document.getElementById("tabelaPrincipal")
+
+    if (aba === "patio") {
+      document.getElementById("content-title").textContent = "PÁTIO"
+      carregarCadastros("AGUARDANDO")
+      habilitarBotoes(true)
+      tabela.classList.remove("expedicao")
+    } else {
+      document.getElementById("content-title").textContent = "EXPEDIÇÃO"
+      carregarCadastros("EXPEDICAO")
+      habilitarBotoes(false)
+      tabela.classList.add("expedicao")
+    }
+  })
+})
+function habilitarBotoes(ativo) {
+  document.getElementById("entradaBtn").disabled = !ativo
+  document.getElementById("editarBtn").disabled = !ativo
+  document.getElementById("enviarSMSBtn").disabled = !ativo
+}
+
+// botão excluir
 document
   .getElementById("excluirBtn")
   .addEventListener("click", function (event) {
@@ -129,12 +218,9 @@ function mensagem() {
   }
 }
 function excluir() {
-  fetch(
-    `https://controlpatio.onrender.com/motoristas/${itemSelecionadoParaSMS.id}`,
-    {
-      method: "DELETE",
-    }
-  )
+  fetch(`https://controlpatio.onrender.com/motoristas/${itemSelecionadoParaSMS.id}`, {
+    method: "DELETE",
+  })
     .then((response) => {
       if (response.ok) {
         alert("Marcação excluída com sucesso!")
@@ -270,3 +356,75 @@ document.getElementById("filtroPlaca").addEventListener("input", function () {
     }
   })
 })
+
+//exportar para o excel
+document
+  .getElementById("exportarExcelBtn")
+  .addEventListener("click", function () {
+    const linhas = document.querySelectorAll("#cadastrosBody tr")
+    const dados = []
+
+    linhas.forEach((linha) => {
+      if (linha.style.display === "none") return
+
+      const colunas = linha.querySelectorAll("td")
+
+      // Adiciona os dados em maiúsculo
+      dados.push({
+        "DATA CADASTRO": colunas[1]?.textContent.trim().toUpperCase(),
+        MENSAGEM: colunas[2]?.textContent.trim().toUpperCase(),
+        CLIENTE: colunas[3]?.textContent.trim().toUpperCase(),
+        TRANSPORTADOR: colunas[4]?.textContent.trim().toUpperCase(),
+        FINALIDADE: colunas[5]?.textContent.trim().toUpperCase(),
+        VEÍCULO: colunas[6]?.textContent.trim().toUpperCase(),
+        "PLACA CAVALO": colunas[7]?.textContent.trim().toUpperCase(),
+        "PLACA BAU1": colunas[8]?.textContent.trim().toUpperCase(),
+        "PLACA BAU2": colunas[9]?.textContent.trim().toUpperCase(),
+        MOTORISTA: colunas[10]?.textContent.trim().toUpperCase(),
+        TELEFONE: colunas[11]?.textContent.trim().toUpperCase(),
+        "DATA ATUAL": colunas[12]?.textContent.trim().toUpperCase(),
+        STATUS: colunas[13]?.textContent.trim().toUpperCase(),
+      })
+    })
+
+    if (dados.length === 0) {
+      alert("Nenhum dado para exportar.")
+      return
+    }
+
+    const ws = XLSX.utils.json_to_sheet(dados)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "MOTORISTAS FILTRADOS")
+    XLSX.writeFile(wb, "MOTORISTAS_FILTRADOS.xlsx")
+  })
+
+//copiar linha selecionada
+function copiarLinhaSelecionada() {
+  const selecionado = document.querySelector('input[type="checkbox"]:checked')
+
+  if (!selecionado) {
+    alert("Nenhuma linha selecionada.")
+    return
+  }
+
+  // Pega o <tr> pai da checkbox
+  const linha = selecionado.closest("tr")
+
+  // Coleta todos os <td>, ignorando o primeiro (o checkbox)
+  const colunas = Array.from(linha.querySelectorAll("td")).slice(1)
+
+  // Pega o texto visível de cada coluna
+  const valores = colunas.map((td) => td.textContent.trim())
+
+  const texto = valores.join(" | ") // usa tab para colar bonito no Excel
+
+  navigator.clipboard
+    .writeText(texto)
+    .then(() => {
+      alert("Conteúdo copiado:\n" + texto)
+    })
+    .catch((err) => {
+      console.error("Erro ao copiar:", err)
+      alert("Erro ao copiar para a área de transferência.")
+    })
+}

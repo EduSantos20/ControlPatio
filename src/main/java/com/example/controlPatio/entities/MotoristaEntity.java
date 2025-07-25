@@ -11,8 +11,8 @@ import java.util.UUID;
 
 @Data
 @Entity(name = "motorist")
-@Table(name="motorist", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"cpf"})
+@Table(name = "motorist", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "cpf" })
 })
 public class MotoristaEntity {
     @Id
@@ -21,7 +21,7 @@ public class MotoristaEntity {
     private UUID id;
     private String name;
 
-    @Length(min = 11, max = 11)
+    @Length(min = 11, max = 11, message = "CPF já existe!")
     @Column(unique = true)
     private String cpf;
 
@@ -47,5 +47,8 @@ public class MotoristaEntity {
     private LocalDateTime dataCadastro;
     private String nf;
     private String descricao;
+
+    @Column(name = "status")
+    private String status;
 
 }

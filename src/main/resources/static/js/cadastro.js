@@ -17,6 +17,7 @@ document
     const data = {
       name: document.getElementById("name").value,
       cpf: document.getElementById("cpf").value,
+      status:document.getElementById("status").value,
       telephone: document.getElementById("telephone").value,
       transportador: document.getElementById("transportador").value,
       tipoVeiculo: document.getElementById("tipoVeiculo").value,
