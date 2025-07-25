@@ -52,8 +52,8 @@ function preencherTabela(cadastros) {
             <td>
                 ${item.telephone}
             </td>
-            <td>${formatarData1(item.nf)}</td>
-            <td>${formatarData1(item.descricao)}</td>
+            <td>${item.nf}</td>
+            <td>${item.descricao}</td>
             <td>${formatarData1(item.dataCadastro)}</td>
             <td id="status-${item.id}" class="status">Calculando ...</td>
         `
