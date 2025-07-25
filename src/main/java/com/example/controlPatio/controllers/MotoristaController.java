@@ -25,7 +25,16 @@ public class MotoristaController {
 
     @PostMapping("/create")
     public ResponseEntity<Object> criar(@RequestBody MotoristaEntity motoristaEntity) {
+        if(motoristaRepository.findByCpf(motoristaEntity.getCpf())){
+            return ResponseEntity.badRequest().body("CPF já cadastrado!");
+        }
         return ResponseEntity.ok(motoristaService.create(motoristaEntity));
+    }
+    
+    @GetMapping("/verificar-cpf")
+    public ResponseEntity<Boolean> verificarCpf(@RequestParam String cpf) {
+        boolean exists = motoristaRepository.existsByCpf(cpf);
+        return ResponseEntity.ok(exists);
     }
 
     @GetMapping("/listaMotorista")

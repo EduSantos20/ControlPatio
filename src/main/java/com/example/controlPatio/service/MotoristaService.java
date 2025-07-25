@@ -37,8 +37,4 @@ public class MotoristaService {
     public List<MotoristaEntity> findAll() {
         return motoristaRepository.findAll();
     }
-
-    public boolean existsByCpf(String cpf) {
-        return motoristaRepository.findByCpf(cpf).isPresent();
-    }
 }
