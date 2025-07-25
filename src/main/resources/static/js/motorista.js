@@ -52,6 +52,8 @@ function preencherTabela(cadastros) {
             <td>
                 ${item.telephone}
             </td>
+            <td>${formatarData1(item.nf)}</td>
+            <td>${formatarData1(item.descricao)}</td>
             <td>${formatarData1(item.dataCadastro)}</td>
             <td id="status-${item.id}" class="status">Calculando ...</td>
         `
@@ -119,7 +121,9 @@ function carregarCadastros(status = "AGUARDANDO") {
 }
 
 function atualizarContadores() {
-  fetch("https://controlpatio.onrender.com/motoristas/listaPorStatus/AGUARDANDO")
+  fetch(
+    "https://controlpatio.onrender.com/motoristas/listaPorStatus/AGUARDANDO"
+  )
     .then((res) => res.json())
     .then((data) => {
       document.getElementById(
@@ -143,9 +147,12 @@ document.getElementById("entradaBtn").addEventListener("click", () => {
   }
   const exp = itemSelecionadoParaSMS.id
 
-  fetch(`https://controlpatio.onrender.com/motoristas/moverParaExpedicao/${exp}`, {
-    method: "PUT",
-  })
+  fetch(
+    `https://controlpatio.onrender.com/motoristas/moverParaExpedicao/${exp}`,
+    {
+      method: "PUT",
+    }
+  )
     .then((response) => {
       if (!response.ok) throw new Error("Erro ao mover para expedição")
       return response.json()
@@ -218,9 +225,12 @@ function mensagem() {
   }
 }
 function excluir() {
-  fetch(`https://controlpatio.onrender.com/motoristas/${itemSelecionadoParaSMS.id}`, {
-    method: "DELETE",
-  })
+  fetch(
+    `https://controlpatio.onrender.com/motoristas/${itemSelecionadoParaSMS.id}`,
+    {
+      method: "DELETE",
+    }
+  )
     .then((response) => {
       if (response.ok) {
         alert("Marcação excluída com sucesso!")
